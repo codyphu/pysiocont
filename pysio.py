@@ -91,7 +91,7 @@ window = tk.Tk()
 fft = np.zeros((1, 1))
 spec = np.zeros((1, 1))
 fig = plt.Figure(figsize=(5,4))
-region_y = data
+
 dft_frame = tk.Frame(window)
 first_dft = True
 
@@ -101,6 +101,7 @@ fir_coeff = firwin(3, 50/(fs/2))
 filtered=lfilter(fir_coeff, 1.0, data)
 sos  = butter(1, [low, high], btype='bandpass', output='sos')
 filtered = sosfilt(sos, filtered)
+region_y = filtered
 
 def select_file():
     filename = tk.filedialog.askopenfilename()
