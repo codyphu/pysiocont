@@ -9,7 +9,7 @@ import numpy as np
 from matplotlib.widgets import SpanSelector
 import matplotlib.pyplot as plt
 from scipy import signal as sigg
-from scipy.signal import find_peaks
+from scipy.signal import find_peaks,butter,sosfilt,firwin,lfilter
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 from tkinter import simpledialog, filedialog
 import os
@@ -95,6 +95,12 @@ region_y = data
 dft_frame = tk.Frame(window)
 first_dft = True
 
+low  = 1 / (fs/2)
+high = 50 / (fs/2) #128 is the typical nyquist frequency for EEG
+fir_coeff = firwin(3, 50/(fs/2))
+filtered=lfilter(fir_coeff, 1.0, data)
+sos  = butter(1, [low, high], btype='bandpass', output='sos')
+filtered = sosfilt(sos, filtered)
 
 def select_file():
     filename = tk.filedialog.askopenfilename()
@@ -325,4 +331,4 @@ def bandpower(x, fs):
 
 
 if __name__ == '__main__':
-    create_window(data)
+    create_window(filtered)
